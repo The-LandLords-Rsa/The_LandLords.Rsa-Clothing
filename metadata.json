@@ -1,0 +1,6 @@
+{
+  "name": "The LandLords RSA",
+  "description": "Official storefront, lookbook, and collection catalog for South African streetwear brand The LandLords RSA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
