@@ -25,6 +25,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const [quantity, setQuantity] = useState<number>(1);
   const [showBackView, setShowBackView] = useState(false);
   const [activeDetailImage, setActiveDetailImage] = useState<string | null>(null);
+  const [isPlayingVideo, setIsPlayingVideo] = useState<boolean>(false);
   const [addedNotice, setAddedNotice] = useState(false);
 
   // Active colorway configuration
@@ -64,19 +65,30 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Left Column: Garment Image Preview & Alternate angles */}
+          {/* Left Column: Garment Image Preview & Alternate angles / 3D Video */}
           <div className="relative bg-neutral-950 p-6 sm:p-8 flex flex-col items-center justify-between border-b md:border-b-0 md:border-r border-neutral-800">
-            {/* Main Stage Image */}
-            <div className="relative w-full aspect-[3/4] max-h-[440px] flex items-center justify-center">
-              <img
-                src={activeMainImage}
-                alt={product.name}
-                className="w-full h-full object-contain object-center transition-all duration-300"
-                referrerPolicy="no-referrer"
-              />
+            {/* Main Stage Image / Video */}
+            <div className="relative w-full aspect-square max-h-[420px] flex items-center justify-center bg-neutral-900/60 rounded-2xl overflow-hidden p-2">
+              {isPlayingVideo && product.video ? (
+                <video
+                  src={product.video}
+                  autoPlay
+                  loop
+                  playsInline
+                  controls
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              ) : (
+                <img
+                  src={activeMainImage}
+                  alt={product.name}
+                  className="w-full h-full object-contain object-center transition-all duration-300"
+                  referrerPolicy="no-referrer"
+                />
+              )}
 
               {/* Front / Back Toggle Float */}
-              {currentBack && !activeDetailImage && (
+              {currentBack && !activeDetailImage && !isPlayingVideo && (
                 <button
                   id="modal-toggle-view-btn"
                   onClick={() => setShowBackView(!showBackView)}
@@ -88,16 +100,18 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               )}
             </div>
 
-            {/* Thumbnail Selectors (Front, Back, Details) */}
+            {/* Thumbnail Selectors (Front, Back, 3D Video, Details) */}
             <div className="flex items-center gap-2.5 mt-4 pt-4 border-t border-neutral-800/80 overflow-x-auto w-full justify-center">
               <button
                 onClick={() => {
+                  setIsPlayingVideo(false);
                   setActiveDetailImage(null);
                   setShowBackView(false);
                 }}
                 className={`w-14 h-14 rounded-lg overflow-hidden border p-1 bg-neutral-900 transition-all ${
-                  !activeDetailImage && !showBackView ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
+                  !isPlayingVideo && !activeDetailImage && !showBackView ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
                 }`}
+                title="Front View"
               >
                 <img src={currentFront} alt="Front" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
               </button>
@@ -105,23 +119,45 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               {currentBack && (
                 <button
                   onClick={() => {
+                    setIsPlayingVideo(false);
                     setActiveDetailImage(null);
                     setShowBackView(true);
                   }}
                   className={`w-14 h-14 rounded-lg overflow-hidden border p-1 bg-neutral-900 transition-all ${
-                    !activeDetailImage && showBackView ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
+                    !isPlayingVideo && !activeDetailImage && showBackView ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
                   }`}
+                  title="Back View"
                 >
                   <img src={currentBack} alt="Back" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                </button>
+              )}
+
+              {/* 3D Video Thumbnail */}
+              {product.video && (
+                <button
+                  onClick={() => {
+                    setIsPlayingVideo(true);
+                    setActiveDetailImage(null);
+                  }}
+                  className={`w-14 h-14 rounded-lg overflow-hidden border p-1 bg-neutral-900 flex flex-col items-center justify-center text-center transition-all ${
+                    isPlayingVideo ? 'border-amber-400 ring-1 ring-amber-400 bg-amber-400/10' : 'border-neutral-800 opacity-60 hover:opacity-100'
+                  }`}
+                  title="Watch 3D Campaign Video"
+                >
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold leading-tight uppercase">3D</span>
+                  <span className="text-[9px] font-mono text-neutral-300 uppercase">Video</span>
                 </button>
               )}
 
               {product.detailImages?.map((detailImg, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveDetailImage(detailImg)}
+                  onClick={() => {
+                    setIsPlayingVideo(false);
+                    setActiveDetailImage(detailImg);
+                  }}
                   className={`w-14 h-14 rounded-lg overflow-hidden border p-1 bg-neutral-900 transition-all ${
-                    activeDetailImage === detailImg ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
+                    !isPlayingVideo && activeDetailImage === detailImg ? 'border-amber-400 ring-1 ring-amber-400' : 'border-neutral-800 opacity-60 hover:opacity-100'
                   }`}
                 >
                   <img src={detailImg} alt={`Detail ${idx + 1}`} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
@@ -149,8 +185,20 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-neutral-100 leading-tight mb-2">
                 {product.name}
               </h2>
-              <div className="text-2xl font-extrabold text-neutral-50 mb-4 tracking-tight">
-                {formatPrice(product.priceZAR, currency)}
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl font-extrabold text-neutral-50 tracking-tight">
+                  {formatPrice(product.salePriceZAR || product.priceZAR, currency)}
+                </span>
+                {product.salePriceZAR && (
+                  <span className="text-base text-neutral-500 line-through font-medium font-mono">
+                    {formatPrice(product.priceZAR, currency)}
+                  </span>
+                )}
+                {product.salePriceZAR && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-neutral-950 uppercase font-mono">
+                    Special Drop Price
+                  </span>
+                )}
               </div>
 
               {/* Description */}
@@ -188,9 +236,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               )}
 
               {/* Size Selector */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                  <span>Select Size</span>
+                  <span className="flex items-center gap-1.5 text-amber-400 font-bold">
+                    <span>👉 Step 1: Select Your Size</span>
+                  </span>
                   <button
                     onClick={onOpenSizeGuide}
                     className="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-medium lowercase tracking-normal"
@@ -218,7 +268,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               </div>
 
               {/* Garment Specifications Panel */}
-              <div className="p-3.5 rounded-2xl bg-neutral-950/70 border border-neutral-800 space-y-2 text-xs mb-6">
+              <div className="p-3.5 rounded-2xl bg-neutral-950/70 border border-neutral-800 space-y-2 text-xs mb-5">
                 <div className="flex items-center justify-between text-neutral-300">
                   <span className="text-neutral-500 font-medium">Textile & GSM</span>
                   <span className="font-semibold text-neutral-200">{product.fabric}</span>
@@ -234,14 +284,24 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               </div>
             </div>
 
-            {/* Action Buttons: Add to Bag and WhatsApp Concierge */}
-            <div className="space-y-3 pt-2">
-              {/* Quantity selector & Add to Bag */}
+            {/* Pointer Callout Label to Buy Button */}
+            <div className="mb-2.5 p-2 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-between text-[11px] text-amber-300 font-semibold uppercase tracking-wider">
+              <span className="flex items-center gap-1.5">
+                <span className="animate-bounce">👇</span>
+                <span>Step 2: Add to Trolley & Continue to Checkout</span>
+              </span>
+              <span className="font-mono text-[10px] text-neutral-400 font-normal">Fast Dispatch RSA</span>
+            </div>
+
+            {/* Action Buttons: Add to Trolley & Direct Checkout */}
+            <div className="space-y-2.5 pt-1">
+              {/* Quantity selector & Add to Trolley */}
               <div className="flex items-center gap-3">
                 <div className="flex items-center bg-neutral-950 border border-neutral-800 rounded-xl px-2 py-1">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-8 h-8 rounded text-neutral-400 hover:text-white font-bold text-lg flex items-center justify-center"
+                    aria-label="Decrease quantity"
                   >
                     -
                   </button>
@@ -251,6 +311,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-8 h-8 rounded text-neutral-400 hover:text-white font-bold text-lg flex items-center justify-center"
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>
@@ -268,12 +329,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   {addedNotice ? (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>Added to Bag!</span>
+                      <span>Added to Trolley!</span>
                     </>
                   ) : (
                     <>
                       <ShoppingBag className="w-4 h-4" />
-                      <span>Add to Bag • {formatPrice(product.priceZAR * quantity, currency)}</span>
+                      <span>Add to Trolley • {formatPrice(product.priceZAR * quantity, currency)}</span>
                     </>
                   )}
                 </button>
@@ -283,7 +344,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <button
                 id="modal-whatsapp-inquire-btn"
                 onClick={handleWhatsAppInquiry}
-                className="w-full py-3 px-4 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-800/60 text-emerald-400 hover:text-emerald-300 text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all"
+                className="w-full py-2.5 px-4 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-800/60 text-emerald-400 hover:text-emerald-300 text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Instant Inquire via WhatsApp</span>
@@ -293,7 +354,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <div className="flex items-center justify-center gap-4 text-[11px] text-neutral-400 pt-1">
                 <span className="flex items-center gap-1">
                   <Truck className="w-3.5 h-3.5 text-neutral-400" />
-                  Paxi / Courier Guy SA
+                  Paxi / The Courier Guy SA
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">

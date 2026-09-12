@@ -1,9 +1,13 @@
 import React from 'react';
 import { Layers, ShieldCheck, Compass, Sparkles } from 'lucide-react';
 
-export const BrandHeritage: React.FC = () => {
+interface BrandHeritageProps {
+  onExploreProducts?: () => void;
+}
+
+export const BrandHeritage: React.FC<BrandHeritageProps> = ({ onExploreProducts }) => {
   return (
-    <section id="heritage" className="py-24 bg-neutral-950 border-t border-neutral-900 relative overflow-hidden">
+    <section id="about" className="py-24 bg-neutral-950 border-t border-neutral-900 relative overflow-hidden">
       {/* Background Subtle Ambience */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-amber-400/10 blur-3xl" />
@@ -31,7 +35,7 @@ export const BrandHeritage: React.FC = () => {
               We do not produce disposable fast-fashion. Every hoodie, t-shirt, and tailored trouser is engineered with 100% heavy carded cotton, double-needle reinforcement, and precision screen-printing designed to age gracefully with every wear.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-neutral-800">
+            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-neutral-800 mb-8">
               <div>
                 <div className="font-display text-3xl font-extrabold text-white">480<span className="text-amber-400 text-lg">GSM</span></div>
                 <div className="text-xs text-neutral-400 uppercase tracking-wider mt-1">Heaviest French Terry Weave</div>
@@ -41,6 +45,17 @@ export const BrandHeritage: React.FC = () => {
                 <div className="text-xs text-neutral-400 uppercase tracking-wider mt-1">South African Street Identity</div>
               </div>
             </div>
+
+            {onExploreProducts && (
+              <button
+                id="about-explore-products-btn"
+                onClick={onExploreProducts}
+                className="px-8 py-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-amber-400/10 flex items-center gap-2"
+              >
+                <span>Explore Products & Capsules</span>
+                <span>→</span>
+              </button>
+            )}
           </div>
 
           {/* Heritage Graphic Presentation */}

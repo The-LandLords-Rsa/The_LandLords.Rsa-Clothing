@@ -49,7 +49,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="flex items-center gap-2.5">
               <ShoppingBag className="w-5 h-5 text-amber-400" />
               <h2 className="font-display text-lg font-bold uppercase tracking-wider text-neutral-100">
-                Your Bag ({items.reduce((sum, item) => sum + item.quantity, 0)})
+                Your Trolley ({items.reduce((sum, item) => sum + item.quantity, 0)})
               </h2>
             </div>
             <button
@@ -92,10 +92,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <ShoppingBag className="w-8 h-8" />
                 </div>
                 <h3 className="font-display text-base font-bold uppercase text-neutral-200 mb-1">
-                  Your bag is empty
+                  Your trolley is empty
                 </h3>
                 <p className="text-xs text-neutral-400 max-w-xs mb-6">
-                  Explore The LandLords RSA latest drops and add exclusive garments to your bag.
+                  Explore The LandLords RSA latest drops and add exclusive garments to your trolley.
                 </p>
                 <button
                   onClick={onClose}

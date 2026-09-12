@@ -58,8 +58,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
       className="group relative flex flex-col bg-neutral-900/40 border border-neutral-850 hover:border-neutral-700 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/60 cursor-pointer"
     >
-      {/* Garment Image Container */}
-      <div className="relative aspect-[3/4] w-full bg-neutral-900 overflow-hidden flex items-center justify-center p-4">
+      {/* Garment Image Container - strictly 1:1 aspect ratio to avoid oversized crop tops */}
+      <div className="relative aspect-square w-full bg-neutral-900/90 overflow-hidden flex items-center justify-center p-5">
         <img
           src={displayImage}
           alt={product.name}
@@ -75,9 +75,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               {product.badge}
             </span>
           )}
+          {product.video && (
+            <span className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-black/80 text-emerald-400 border border-emerald-500/30 backdrop-blur-sm flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              3D VIDEO
+            </span>
+          )}
           {product.isNewDrop && !product.badge && (
             <span className="px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-widest bg-amber-400 text-neutral-950">
-              NEW
+              NEW DROP
             </span>
           )}
         </div>
@@ -108,14 +114,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className="flex-1 py-2.5 rounded-xl bg-neutral-950/90 hover:bg-neutral-900 border border-neutral-700 text-xs font-bold uppercase tracking-wider text-neutral-200 hover:text-white flex items-center justify-center gap-1.5 backdrop-blur-md transition-all shadow-lg"
           >
             <Eye className="w-3.5 h-3.5 text-amber-400" />
-            <span>Details</span>
+            <span>Select Piece</span>
           </button>
 
           <button
             id={`quick-add-btn-${product.id}`}
             onClick={handleQuickAddClick}
             className="p-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold transition-all shadow-lg"
-            title="Quick Add to Bag"
+            title="Quick Add to Trolley"
           >
             <Plus className="w-4 h-4" />
           </button>

@@ -28,17 +28,42 @@ export interface Product {
   collectionId: CollectionId;
   category: CategoryId;
   priceZAR: number;
+  salePriceZAR?: number;
+  stockQuantity?: number;
   description: string;
   frontImage: string;
   backImage?: string;
   detailImages?: string[];
+  video?: string;
+  model3d?: string;
   colors?: ProductColor[];
   sizes: string[];
   fabric: string;
   fit: string;
+  careInstructions?: string;
+  tags?: string[];
   badge?: string;
   isNewDrop?: boolean;
   inStock: boolean;
+}
+
+export interface CollectionMeta {
+  id: CollectionId;
+  name: string;
+  headline: string;
+  subheadline: string;
+  accentColor: string;
+  palette: string[];
+  description: string;
+  heroImage?: string;
+}
+
+export interface ShoeOption {
+  id: string;
+  name: string;
+  type: string;
+  image: string;
+  forGender?: 'both' | 'female';
 }
 
 export interface CartItem {

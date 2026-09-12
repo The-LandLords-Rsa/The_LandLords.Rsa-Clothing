@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Camera, Globe, Mail, ArrowUp } from 'lucide-react';
+import { MessageCircle, Camera, Globe, Mail, ArrowUp, Download, FileArchive } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
@@ -133,28 +133,27 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSizeGuide }) =
             </ul>
           </div>
 
-          {/* Col 4: Newsletter */}
+          {/* Col 4: Source & Downloads */}
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-neutral-100 mb-4">
-              Archive Access
+              Website Package
             </h4>
             <p className="text-[11px] text-neutral-400 leading-relaxed mb-3">
-              Be the first to receive secret access links for future capsule drops.
+              Full codebase with React, Tailwind, Three.js viewer, all campaign videos and high-res garment photos.
             </p>
-            <form onSubmit={(e) => { e.preventDefault(); alert('Subscribed to The LandLords RSA VIP drop alerts!'); }} className="space-y-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                required
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-neutral-200 focus:outline-none focus:border-amber-400"
-              />
-              <button
-                type="submit"
-                className="w-full py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-100 font-bold uppercase tracking-wider text-[11px] transition-all"
-              >
-                Join Private List
-              </button>
-            </form>
+            <a
+              id="download-website-zip-btn"
+              href="/the-landlords-rsa-website.zip"
+              download="the-landlords-rsa-website.zip"
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 font-bold uppercase tracking-wider text-[11px] transition-all shadow-md hover:shadow-amber-400/20 mb-3"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download Website ZIP</span>
+            </a>
+            <div className="flex items-center gap-2 text-[10px] text-neutral-400 font-mono">
+              <FileArchive className="w-3 h-3 text-amber-400" />
+              <span>~84MB • Ready to Run Locally</span>
+            </div>
           </div>
         </div>
 

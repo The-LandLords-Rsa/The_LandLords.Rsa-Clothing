@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Menu, X, Globe, Film, Sparkles, HelpCircle } from 'lucide-react';
+import { ShoppingBag, Menu, X, Globe, Film, Sparkles, HelpCircle, Palette, ShieldCheck } from 'lucide-react';
 import { Currency } from '../types';
 
 interface NavbarProps {
@@ -9,6 +9,7 @@ interface NavbarProps {
   onToggleCurrency: () => void;
   onNavigate: (sectionId: string) => void;
   onOpenSizeGuide: () => void;
+  onOpenAdmin: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleCurrency,
   onNavigate,
   onOpenSizeGuide,
+  onOpenAdmin,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -31,9 +33,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Top micro announcement bar */}
       <div className="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-950 py-1.5 px-4 text-center text-xs tracking-widest text-neutral-400 border-b border-neutral-800/50 uppercase font-medium flex items-center justify-center gap-3">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-        <span>New Drop: Mansion Affairs & Love, Hoops & Dreams</span>
+        <span>New Drop: The Mansion Affairs • Angel Kind • Love, Hoops & Dreams</span>
         <span className="hidden sm:inline text-neutral-600">|</span>
-        <span className="hidden sm:inline text-neutral-400">Free SA Shipping over R1,500</span>
+        <span className="hidden sm:inline text-neutral-400">Rent Is Due</span>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,28 +65,36 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <button
-              id="nav-collection-btn"
-              onClick={() => handleNavClick('shop')}
-              className="text-sm font-medium tracking-wider text-neutral-300 hover:text-amber-400 transition-colors uppercase"
-            >
-              Collections
-            </button>
+          <nav className="hidden md:flex items-center gap-7">
             <button
               id="nav-lookbook-btn"
               onClick={() => handleNavClick('lookbook')}
               className="text-sm font-medium tracking-wider text-neutral-300 hover:text-amber-400 transition-colors uppercase flex items-center gap-1.5"
             >
               <Film className="w-3.5 h-3.5 text-amber-400" />
-              Campaign Film
+              Stage & Videos
             </button>
             <button
               id="nav-story-btn"
-              onClick={() => handleNavClick('heritage')}
+              onClick={() => handleNavClick('about')}
               className="text-sm font-medium tracking-wider text-neutral-300 hover:text-amber-400 transition-colors uppercase"
             >
-              Heritage
+              About Us
+            </button>
+            <button
+              id="nav-collection-btn"
+              onClick={() => handleNavClick('shop')}
+              className="text-sm font-medium tracking-wider text-neutral-300 hover:text-amber-400 transition-colors uppercase"
+            >
+              Products & Drops
+            </button>
+            <button
+              id="nav-outfit-btn"
+              onClick={() => handleNavClick('outfit-builder')}
+              className="text-sm font-medium tracking-wider text-neutral-300 hover:text-amber-400 transition-colors uppercase flex items-center gap-1.5"
+            >
+              <Palette className="w-3.5 h-3.5 text-amber-400" />
+              Build Outfit
             </button>
             <button
               id="nav-sizeguide-btn"
@@ -98,6 +108,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-3">
+            {/* Admin Panel Toggle */}
+            <button
+              id="admin-panel-btn"
+              onClick={onOpenAdmin}
+              className="p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-amber-400 text-neutral-400 hover:text-amber-400 transition-all focus:outline-none"
+              title="Brand Owner / Admin Management"
+            >
+              <ShieldCheck className="w-4 h-4" />
+            </button>
+
             {/* Currency Switcher */}
             <button
               id="currency-toggle-btn"
@@ -109,12 +129,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{currency}</span>
             </button>
 
-            {/* Shopping Bag Button */}
+            {/* Shopping Trolley Button */}
             <button
               id="shopping-cart-btn"
               onClick={onOpenCart}
-              className="relative p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-100 hover:text-amber-400 transition-all focus:outline-none"
-              aria-label="Open Shopping Bag"
+              className="relative p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-amber-400 text-neutral-100 hover:text-amber-400 transition-all focus:outline-none"
+              aria-label="Open Shopping Trolley"
+              title="Open Trolley"
             >
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
@@ -141,23 +162,30 @@ export const Navbar: React.FC<NavbarProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-neutral-800 bg-neutral-950 px-4 pt-3 pb-6 space-y-3 animate-fadeIn">
           <button
-            onClick={() => handleNavClick('shop')}
-            className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-neutral-200 hover:text-amber-400 uppercase border-b border-neutral-900"
-          >
-            Collections & Garments
-          </button>
-          <button
             onClick={() => handleNavClick('lookbook')}
             className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-neutral-200 hover:text-amber-400 uppercase border-b border-neutral-900 flex items-center justify-between"
           >
-            <span>Campaign Film & Lookbook</span>
+            <span>Stage & Video Queue</span>
             <Film className="w-4 h-4 text-amber-400" />
           </button>
           <button
-            onClick={() => handleNavClick('heritage')}
+            onClick={() => handleNavClick('about')}
             className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-neutral-200 hover:text-amber-400 uppercase border-b border-neutral-900"
           >
-            Brand Heritage & Craft
+            About Us & Brand Story
+          </button>
+          <button
+            onClick={() => handleNavClick('shop')}
+            className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-neutral-200 hover:text-amber-400 uppercase border-b border-neutral-900"
+          >
+            Products & Garments
+          </button>
+          <button
+            onClick={() => handleNavClick('outfit-builder')}
+            className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-neutral-200 hover:text-amber-400 uppercase border-b border-neutral-900 flex items-center justify-between"
+          >
+            <span>Build Your Outfit</span>
+            <Palette className="w-4 h-4 text-amber-400" />
           </button>
           <button
             onClick={() => {
@@ -168,6 +196,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <span>Size Guide & Fits</span>
             <HelpCircle className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => {
+              onOpenAdmin();
+              setMobileMenuOpen(false);
+            }}
+            className="w-full text-left py-2.5 text-sm font-semibold tracking-wider text-amber-400 hover:text-amber-300 uppercase flex items-center justify-between"
+          >
+            <span>Owner / Admin Dashboard</span>
+            <ShieldCheck className="w-4 h-4" />
           </button>
         </div>
       )}
